@@ -10,12 +10,13 @@ for file in filepaths:
 	# Gather the data
 	df = pd.read_excel(file, sheet_name="Sheet 1")
 	order_number, date = Path(file).stem.split("-")
+	columns_names = [item.replace("_", " ").title() for item in list(df.columns)]
 
 	# Create a new PDF
 	pdf = FPDF(orientation="portrait", unit="mm", format="a4")
 	pdf.add_page()
 
-	# Write the data
+	# Write the title and date
 	pdf.set_font(family="times", size= 24, style="B")
 	pdf.cell(w=0, h=15, ln=1, txt=f"Order number: {order_number}" )
 	pdf.set_font(family="times", size= 18, style="B")
@@ -23,14 +24,27 @@ for file in filepaths:
 	pdf.cell(w=0, h=10, ln=1, txt=f"Date (y/m/d): {date}" )
 	pdf.ln(5)
 
+	# Write the names of each column
+	pdf.set_font(family="helvetica", size=14)
+	pdf.set_text_color(0, 0, 0)
+	pdf.cell(border=1, w=30, h=10, txt=columns_names[0], ln=0)
+	pdf.cell(border=1, w=80, h=10, txt=columns_names[1], ln=0)
+	pdf.cell(border=1, w=20, h=10, txt=columns_names[2], ln=0)
+	pdf.cell(border=1, w=25, h=10, txt=columns_names[3], ln=0)
+	pdf.cell(border=1, w=0, h=10, txt=columns_names[4], ln=1)
+
+	# Write the individual items and its cost
+	total_price = 0
 	for index, row in df.iterrows():
-		pdf.set_font(family="helvetica", size= 14)
-		pdf.set_text_color(0, 0, 0)
+		total_price += row["total_price"]
+
 		pdf.cell(border=1, w=30, h=10, txt=str(row["product_id"]), ln=0)
 		pdf.cell(border=1, w=80, h=10, txt=str(row["product_name"]), ln=0)
 		pdf.cell(border=1, w=20, h=10, txt=str(row["amount_purchased"]), ln=0)
 		pdf.cell(border=1, w=25, h=10, txt=str(row["price_per_unit"]), ln=0)
-		pdf.cell(border=1, w=30, h=10, txt=str(row["total_price"]), ln=1)
+		pdf.cell(border=1, w=0, h=10, txt=str(row["total_price"]), ln=1)
+
+	pdf.cell(border=1, w=0, h=10, txt=f"Total Cost: ${total_price}", ln=1, align="R")
 
 
 	# Save and export

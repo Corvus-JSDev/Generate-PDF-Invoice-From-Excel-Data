@@ -54,6 +54,12 @@ for file in filepaths:
 
 	pdf.cell(border=1, w=0, h=10, txt=f"Total Cost: ${total_price}", ln=1, align="R")
 
+	pdf.ln(20)
+	pdf.set_font(family="helvetica", size=20, style="B")
+	pdf.cell(w=0, h=20, txt=f"Total Cost: ${total_price}", ln=1)
+	pdf.cell(w=45, h=14, txt="PythonHow", ln=0)
+	pdf.image("pythonhow.png", w=15)
+
 
 	# Save and export
 	pdf.output(f"PDFs/{order_number}-store_name.pdf")

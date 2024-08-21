@@ -1,5 +1,6 @@
 /homework
 
+.venv
 .env
 
 test.py
